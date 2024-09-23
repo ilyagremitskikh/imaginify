@@ -4,10 +4,10 @@ import { revalidatePath } from 'next/cache';
 
 import { handleError } from '../utils';
 import prisma from '@/prisma/prisma-client';
-import { User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 // CREATE
-export async function createUser(user: User) {
+export async function createUser(user: Prisma.UserCreateInput) {
   try {
     const newUser = await prisma.user.create({ data: user });
     return JSON.parse(JSON.stringify(newUser));
@@ -30,10 +30,10 @@ export async function getUserById(userId: string) {
 }
 
 // UPDATE
-export async function updateUser(clerkId: string, user: User) {
+export async function updateUser(clerkId: string, user: Prisma.UserUpdateInput) {
   try {
     const updatedUser = await prisma.user.update({
-      where: { clerkId },
+      where: { clerkId: clerkId },
       data: user,
     });
 
@@ -51,14 +51,14 @@ export async function deleteUser(clerkId: string) {
     // Find user to delete
     // const userToDelete = await User.findOne({ clerkId });
 
-    const userToDelete = await prisma.user.findFirst({ where: { clerkId } });
+    const userToDelete = await prisma.user.findFirst({ where: { clerkId: clerkId } });
 
     if (!userToDelete) {
       throw new Error('User not found');
     }
 
     // Delete user
-    const deletedUser = await prisma.user.delete({ where: { clerkId } });
+    const deletedUser = await prisma.user.delete({ where: { clerkId: clerkId } });
     revalidatePath('/');
 
     return deletedUser ? JSON.parse(JSON.stringify(deletedUser)) : null;
