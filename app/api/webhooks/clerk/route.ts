@@ -1,7 +1,6 @@
 import { Webhook } from 'svix';
 import { headers } from 'next/headers';
 import { WebhookEvent } from '@clerk/nextjs/server';
-import { Prisma } from '@prisma/client';
 import { createUser } from '@/lib/actions/user.action';
 import { NextResponse } from 'next/server';
 
@@ -56,7 +55,7 @@ export async function POST(req: Request) {
   if (eventType === 'user.created') {
     const { id, email_addresses, image_url, first_name, last_name, username } = evt.data;
 
-    const user: Prisma.UserCreateInput = {
+    const user = {
       clerkId: id,
       email: email_addresses[0].email_address,
       username: username!,
