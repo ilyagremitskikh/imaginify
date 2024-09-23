@@ -4,15 +4,16 @@ import { revalidatePath } from 'next/cache';
 
 import { handleError } from '../utils';
 import prisma from '@/prisma/prisma-client';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 
 // CREATE
-export async function createUser(user: Prisma.UserCreateInput) {
+export async function createUser(user: Prisma.UserCreateInput): Promise<User> {
   try {
     const newUser = await prisma.user.create({ data: user });
-    return JSON.parse(JSON.stringify(newUser));
+    return newUser;
   } catch (error) {
     handleError(error);
+    return Promise.reject(error);
   }
 }
 
