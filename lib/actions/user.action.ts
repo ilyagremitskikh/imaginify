@@ -2,7 +2,6 @@
 
 import { revalidatePath } from 'next/cache';
 
-import { handleError } from '../utils';
 import prisma from '@/prisma/prisma-client';
 import { Prisma, User } from '@prisma/client';
 
@@ -12,7 +11,6 @@ export async function createUser(user: Prisma.UserCreateInput): Promise<User> {
     const newUser = await prisma.user.create({ data: user });
     return newUser;
   } catch (error) {
-    handleError(error);
     return Promise.reject(error);
   }
 }
@@ -26,7 +24,7 @@ export async function getUserById(userId: string) {
 
     return JSON.parse(JSON.stringify(user));
   } catch (error) {
-    handleError(error);
+    return Promise.reject(error);
   }
 }
 
@@ -42,7 +40,7 @@ export async function updateUser(clerkId: string, user: Prisma.UserUpdateInput) 
 
     return JSON.parse(JSON.stringify(updatedUser));
   } catch (error) {
-    handleError(error);
+    return Promise.reject(error);
   }
 }
 
@@ -64,7 +62,7 @@ export async function deleteUser(clerkId: string) {
 
     return deletedUser ? JSON.parse(JSON.stringify(deletedUser)) : null;
   } catch (error) {
-    handleError(error);
+    return Promise.reject(error);
   }
 }
 
@@ -84,6 +82,6 @@ export async function updateCredits(userId: number, creditFee: number) {
 
     return JSON.parse(JSON.stringify(updatedUserCredits));
   } catch (error) {
-    handleError(error);
+    return Promise.reject(error);
   }
 }
