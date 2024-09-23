@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  clerkId String @unique 
+  email String @unique
+  username String @unique
+  photo String
+  firstName String?
+  lastName String?
+  planId Int @default(1)
+  creditBalance Int @default(10)
+  Transaction Transaction[]
+  Image Image[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Transaction {
+  id Int @id @default(autoincrement())
+  stripeId String @unique
+  amount Int
+  plan String?
+  credits Int?
+  userId Int
+  buyer User @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Image {
+  id Int @id @default(autoincrement())
+  title String
+  transformationType String
+  publicId String
+  secureUrl String
+  width Int?
+  height Int?
+  transformationUrl String?
+  aspectRatio String?
+  color String?
+  prompt String?
+  userId Int
+  author User @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
