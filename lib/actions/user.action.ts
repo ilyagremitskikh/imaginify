@@ -1,19 +1,16 @@
 'use server';
 
-import { PrismaClient } from '@prisma/client';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@/prisma/generated/client';
+import prisma from '@/prisma/prisma-client';
+import { handleError } from '../utils';
 
 // CREATE
-export async function createUser(user: Prisma.UserCreateInput) {
-  const prisma = new PrismaClient();
-  await prisma.user
-    .create({ data: user })
-    .then(async () => {
-      await prisma.$disconnect();
-    })
-    .catch(async (e) => {
-      console.error(e);
-      await prisma.$disconnect();
-      process.exit(1);
-    });
+export async function createUser(user: Prisma.UserCreateInput): Promise<User> {
+  try {
+    const newUser = await prisma.user.create({ data: user });
+    return newUser;
+  } catch (error) {
+    handleError(error);
+    return Promise.reject(error);
+  }
 }
