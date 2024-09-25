@@ -5,11 +5,11 @@ import React from 'react';
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
-      {/* Sidebar */}
-      <Sidebar />
-      {/* MobileNav */}
-      <MobileNav />
       <main className="root">
+        {/* Sidebar */}
+        <Sidebar />
+        {/* MobileNav */}
+        <MobileNav />
         <div className="root-container">
           <div className="wrapper">{children}</div>
         </div>
